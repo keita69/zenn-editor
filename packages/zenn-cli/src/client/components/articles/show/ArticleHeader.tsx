@@ -5,12 +5,41 @@ import { getArticleErrors } from '../../../lib/validator';
 import { ContentContainer } from '../../ContentContainer';
 import { TopicList } from '../../TopicList';
 import { PropertyRow } from '../../PropertyRow';
+import { publishedAtRegex } from '../../../lib/validator';
 import { ValidationErrors } from '../../ValidationErrors';
 
 type Props = { article: Article };
 
+function completePublishedAt(publishedAt?: null | string): string | undefined {
+  if (publishedAt == null) return undefined;
+  if (!publishedAt.match(publishedAtRegex))
+    return 'フォーマットを確認してください';
+  if (isNaN(Date.parse(publishedAt))) return 'フォーマットを確認してください';
+
+  // 日付だけだとUTC時間になるので、00:00を追加してローカルタイムにする
+  return formatPublishedAt(
+    new Date(
+      Date.parse(
+        publishedAt.length === 10 ? publishedAt + ' 00:00' : publishedAt
+      )
+    )
+  );
+}
+
+function formatPublishedAt(publishedAt: Date): string {
+  return new Intl.DateTimeFormat('ja-jp', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(publishedAt);
+}
+
 export const ArticleHeader: React.VFC<Props> = ({ article }) => {
   const validationErrors = useMemo(() => getArticleErrors(article), [article]);
+  const publishedAt = completePublishedAt(article.published_at);
+  const scheduledPublish = publishedAt && Date.parse(publishedAt) > Date.now();
 
   return (
     <StyledArticleHeader>
@@ -27,11 +56,27 @@ export const ArticleHeader: React.VFC<Props> = ({ article }) => {
 
           <PropertyRow title="published">
             {typeof article.published === 'boolean' ? (
-              <>{article.published ? 'true（公開）' : 'false（下書き）'}</>
+              <>
+                {article.published
+                  ? scheduledPublish
+                    ? 'true（公開予約）'
+                    : 'true（公開）'
+                  : 'false（下書き）'}
+              </>
             ) : (
               'true もしくは false を指定してください'
             )}
           </PropertyRow>
+
+          {publishedAt && (
+            <PropertyRow title="published_at">{publishedAt}</PropertyRow>
+          )}
+
+          {!!article.publication_name && (
+            <PropertyRow title="publication_name">
+              {article.publication_name}
+            </PropertyRow>
+          )}
 
           <PropertyRow title="type">
             {article.type === 'tech' ? (

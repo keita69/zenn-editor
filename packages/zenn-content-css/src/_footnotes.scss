@@ -15,9 +15,8 @@
 .footnotes-list {
   margin: 13px 0 0;
 }
-// TODO: Remote this after all the html cache deleted.
-.footnotes-twemoji {
-  border: none;
-  margin: 0 7px 0 0;
-  vertical-align: -3px;
+// フォーカスされている脚注の背景色を変える
+.footnote-item:target {
+  background: #e3eeff;
+  color: $c-contrast;
 }

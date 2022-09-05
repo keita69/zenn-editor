@@ -1,4 +1,4 @@
-import initEmojiRegex from 'emoji-regex/text';
+import initEmojiRegex from 'emoji-regex';
 
 import { ValidationError } from '../types';
 import { Article, Book, Chapter } from '../../common/types';
@@ -51,6 +51,35 @@ const validatePublishedStatus: ItemValidator<Article | Book> = {
   },
 };
 
+// JavaScriptでパースしたときとサーバー側でパースしたときのTZを確実に合わせるため、フォーマットを固定します。
+const validatePublishedAtParse: ItemValidator<Article> = {
+  isCritical: true,
+  getMessage: () =>
+    'published_at（公開日時）は `YYYY-MM-DD` または `YYYY-MM-DD hh:mm` のフォーマットで指定してください',
+  isValid: ({ published_at: publishedAt }) => {
+    if (publishedAt == undefined) return true;
+    if (!publishedAt.match(publishedAtRegex)) return false;
+
+    return !isNaN(Date.parse(publishedAt));
+  },
+};
+
+const validatePublishedAtSchedule: ItemValidator<Article> = {
+  isCritical: true,
+  getMessage: () =>
+    'published_at（公開日時）に未来の日時を指定する場合は、published（公開設定）に true を指定してください（公開日時を過ぎるとZennのサービス上で自動的に公開されます）',
+  isValid: ({ published, published_at: publishedAt }) => {
+    if (published === true) return true;
+    if (publishedAt == null) return true;
+
+    if (isNaN(Date.parse(publishedAt))) {
+      return true; // Date.parseに失敗する場合、このvalidationではエラーとしない
+    } else {
+      return Date.parse(publishedAt) < Date.now();
+    }
+  },
+};
+
 const validateArticleType: ItemValidator<Article> = {
   isCritical: true,
   detailUrl: 'https://zenn.dev/tech-or-idea',
@@ -83,7 +112,7 @@ const validateEmojiFormat: ItemValidator<Article> = {
 };
 
 const validateMissingTopics: ItemValidator<Article | Book> = {
-  isCritical: true,
+  isCritical: false,
   getMessage: () =>
     'topics（記事に関連する言語や技術）を配列で指定してください。例）["react", "javascript"]',
   isValid: ({ topics }) => {
@@ -125,6 +154,16 @@ const validateInvalidTopicLetters: ItemValidator<Article | Book> = {
 const validateUseTags: ItemValidator<Article | Book> = {
   getMessage: () => 'tagsではなくtopicsを使ってください',
   isValid: (item) => !(item as any).tags?.length && !(item as any).tag?.length,
+};
+
+const validatePublicationName: ItemValidator<Article> = {
+  isCritical: true,
+  getMessage: () =>
+    'Publicationの名前が不正です。小文字の半角英数字（a-z0-9）、アンダースコア（_）の2〜15字の組み合わせにしてください',
+  isValid: ({ publication_name }) => {
+    if (!publication_name) return true;
+    return /^[0-9a-z_]{2,15}$/.test(publication_name);
+  },
 };
 
 const validateBookSummary: ItemValidator<Book> = {
@@ -268,6 +307,8 @@ export const getArticleErrors = (article: Article): ValidationError[] => {
     validateMissingTitle,
     validateTitleLength,
     validatePublishedStatus,
+    validatePublishedAtParse,
+    validatePublishedAtSchedule,
     validateArticleType,
     validateEmojiFormat,
     validateMissingEmoji,
@@ -276,6 +317,7 @@ export const getArticleErrors = (article: Article): ValidationError[] => {
     validateInvalidTopicLetters,
     validateTooManyTopics,
     validateTopicType,
+    validatePublicationName,
   ];
   return getValidationErrors(article, validators);
 };
@@ -313,3 +355,6 @@ export const getChapterErrors = (chapter: Chapter): ValidationError[] => {
   ];
   return getValidationErrors(chapter, validators);
 };
+
+export const publishedAtRegex =
+  /^[0-9]{4}-[0-9]{2}-[0-9]{2}(\s[0-9]{2}:[0-9]{2})?$/;

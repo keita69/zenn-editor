@@ -30,14 +30,9 @@ describe('No XSS Vulnerability', () => {
     expect(html).toContain('&quot;&lt;img/src=./ onerror=alert(location)&gt;');
   });
   test('should escape img tag around code fence', () => {
-    // make console.warn silent
-    const consoleSpy = jest.spyOn(console, 'warn');
-    consoleSpy.mockImplementation((x) => x);
-
     const html = markdownToHtml(
       `\`\`\`"><img/onerror="alert(location)"src=.>\nany\n\`\`\``
     );
-    expect(consoleSpy).toHaveBeenCalled();
     expect(html).toContain(
       '<div class="code-block-container"><pre class=""><code class="">any\n</code></pre></div>'
     );
@@ -65,11 +60,8 @@ describe('No XSS Vulnerability', () => {
     expect(html).toContain(`<span class="token operator">&lt;</span>script`);
   });
   test('should escape img tag around mermaid syntax', () => {
-    const html = markdownToHtml(
-      `\`\`\`mermaid\ngraph TD\nA["<img src="invalid" onerror=alert('XSS')/>"] --> B\`\`\``
-    );
-    expect(html).toContain(
-      '<div class="embed-mermaid"><embed-mermaid><pre class="zenn-mermaid">graph TD\nA[&quot;&lt;img src=&quot;invalid&quot; onerror=alert(\'XSS\')/&gt;&quot;] --&gt; B```</pre></embed-mermaid></div>'
-    );
+    const content = `graph TD\nA["<img src="invalid" onerror=alert('XSS')/>"] --> B`;
+    const html = markdownToHtml(`\`\`\`mermaid\n${content}\`\`\``);
+    expect(html).toContain(encodeURIComponent(content));
   });
 });
