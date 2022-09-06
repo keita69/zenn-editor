@@ -5,3 +5,5 @@ yarn-error.log
 lerna-debug.log
 .node-version
 .idea
+package-lock.json
+yarn.lock
