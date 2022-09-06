@@ -1,3 +1,12 @@
+## Memo
+- 下記３つのバージョンは固定（^0.1.105にしない）
+```json:k69blogのpackage.json
+    "zenn-content-css": "0.1.105",
+    "zenn-embed-elements": "0.1.105",
+    "zenn-markdown-html": "0.1.105"
+```
+
+
 ![Zenn Editor](https://user-images.githubusercontent.com/34590683/91540859-60e06780-e956-11ea-9762-0acac2b7c4c5.png)
 
 ## CLI Documentation
