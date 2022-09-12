@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import {
   containerDetailsOptions,
   containerMessageOptions,
+  containerHtmlOptions,
 } from './utils/md-container';
 import { mdRendererFence } from './utils/md-renderer-fence';
 import { mdLinkifyToCard } from './utils/md-linkify-to-card';
@@ -23,6 +24,7 @@ const mdLinkAttributes = require('markdown-it-link-attributes');
 const md = markdownIt({
   breaks: true,
   linkify: true,
+  html: true
 });
 
 md.linkify.set({ fuzzyLink: false });
@@ -33,6 +35,7 @@ md.use(mdBr)
   .use(mdCustomBlock)
   .use(mdContainer, 'details', containerDetailsOptions)
   .use(mdContainer, 'message', containerMessageOptions)
+  .use(mdContainer, 'html', containerHtmlOptions)
   .use(mdFootnote)
   .use(mdTaskLists, { enabled: true })
   .use(mdInlineComments)

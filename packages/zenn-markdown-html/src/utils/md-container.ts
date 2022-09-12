@@ -49,3 +49,23 @@ export const containerMessageOptions = {
     }
   },
 };
+
+// ::: html
+//   html
+// :::
+export const containerHtmlOptions = {
+  validate: function (params: string) {
+    return /^html\s*$/.test(params.trim());
+  },
+  render: function (tokens: Token[], idx: number) {
+    const m = tokens[idx].info.trim().match(/^html\s*$/);
+    const summary = m?.[1] || '';
+    if (tokens[idx].nesting === 1) {
+      // opening tag
+      return '<div class="flex justify-center bg-base-200" >';
+    } else {
+      // closing tag
+      return '</div>\n';
+    }
+  },
+};
