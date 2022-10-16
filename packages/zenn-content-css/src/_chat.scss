@@ -1,0 +1,51 @@
+// Chat box by markdown-it-container
+.chat {
+  position: relative;
+  display: inline-block;
+  margin: 1.5em 0;
+  padding: 1em;
+  min-width: 12em;
+  max-width: 100%;
+  color: #100f0f;
+  font-size: 0.94em;
+  border: 2px solid #5d5656;
+  border-radius: 16px;
+  background: #e9e7e7;
+
+  &:before {
+    content: "";
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    margin-top: -15px;
+    border: 15px solid transparent;
+    border-right: 15px solid #5d5656;
+  }
+
+  &>* {
+    margin: 0.5rem 0;
+
+    &:first-child,
+    &:last-child {
+      margin: 0;
+    }
+  }
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
+}
+
+.chat.right {
+
+  &:before {
+    content: "";
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    margin-top: -15px;
+    border: 15px solid transparent;
+    border-left: 15px solid #5d5656;
+  }
+}

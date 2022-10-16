@@ -49,3 +49,26 @@ export const containerMessageOptions = {
     }
   },
 };
+
+// ::: chat right(rightあり：右側からの吹き出し)
+//   text
+// :::
+const chatClassRegex = /^chat\s*(right)?$/;
+
+export const containerChatOptions = {
+  validate: function (params: string) {
+    return chatClassRegex.test(params.trim());
+  },
+  render: function (tokens: Token[], idx: number) {
+    const m = tokens[idx].info.trim().match(chatClassRegex);
+    const chatClassName = m?.[1] || '';
+
+    if (tokens[idx].nesting === 1) {
+      // opening tag
+      return '<div class="chat ' + escapeHtml(chatClassName) + '">';
+    } else {
+      // closing tag
+      return '</div>\n';
+    }
+  },
+};

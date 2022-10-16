@@ -27,14 +27,16 @@ $breakpoints: (
 
 // use short classname so that nested css does not become too long.
 .znc {
-  & > *:first-child {
+  &>*:first-child {
     margin-top: 0;
   }
+
   line-height: 1.9;
 
   @import './_content.scss';
   @import './_embed.scss';
   @import './_prism.scss';
   @import './_message.scss';
+  @import './_chat.scss';
   @import './_footnotes.scss';
 }
