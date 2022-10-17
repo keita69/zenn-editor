@@ -50,25 +50,68 @@ export const containerMessageOptions = {
   },
 };
 
-// ::: chat right(rightあり：右側からの吹き出し)
+// ::: lchat (左側のチャット)
 //   text
 // :::
-const chatClassRegex = /^chat\s*(right)?$/;
+const lChatClassRegex = /^lchat\s*(dummiy)?$/;
 
-export const containerChatOptions = {
+export const containerLChatOptions = {
   validate: function (params: string) {
-    return chatClassRegex.test(params.trim());
+    return lChatClassRegex.test(params.trim());
   },
   render: function (tokens: Token[], idx: number) {
-    const m = tokens[idx].info.trim().match(chatClassRegex);
+    const m = tokens[idx].info.trim().match(lChatClassRegex);
     const chatClassName = m?.[1] || '';
 
     if (tokens[idx].nesting === 1) {
       // opening tag
-      return '<div class="chat ' + escapeHtml(chatClassName) + '">';
+      return (
+        '<div class="flex items-center">' +
+        '  <div class="text-center flex flex-col">' +
+        '    <div class="flex-none licon">' +
+        '      <img style="margin: 0px" src="/assets/blog/chat-images/chat-icon-left.jpg">' +
+        '    </div>' +
+        '    <div>k69</div>' +
+        '  </div>' +
+        '  <div class="lchat ' + escapeHtml(chatClassName) + '">');
     } else {
       // closing tag
-      return '</div>\n';
+      return (
+        '  </div>' +
+        '</div>\n');
+    }
+  },
+};
+
+// ::: rchat (右側のチャット)
+//   text
+// :::
+const rChatClassRegex = /^rchat\s*(dummy)?$/;
+
+export const containerRChatOptions = {
+  validate: function (params: string) {
+    return rChatClassRegex.test(params.trim());
+  },
+  render: function (tokens: Token[], idx: number) {
+    const m = tokens[idx].info.trim().match(rChatClassRegex);
+    const chatClassName = m?.[1] || '';
+
+    if (tokens[idx].nesting === 1) {
+      // opening tag
+      return (
+        '<div class="flex items-center justify-end">' +
+        '  <div class="rchat ' + escapeHtml(chatClassName) + '">');
+    } else {
+      // closing tag
+      return (
+        '  </div>' +
+        '  <div class="text-center flex flex-col">' +
+        '    <div class="flex-none ricon">' +
+        '      <img style="margin: 0px" src="/assets/blog/chat-images/chat-icon-right.jpg">' +
+        '    </div>' +
+        '    <div>くるみ</div>' +
+        '  </div>' +
+        '</div>\n');
     }
   },
 };

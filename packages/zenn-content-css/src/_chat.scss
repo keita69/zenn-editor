@@ -1,11 +1,12 @@
 // Chat box by markdown-it-container
-.chat {
+/* 左側のチャットメッセージ */
+.lchat {
   position: relative;
   display: inline-block;
   margin: 1.5em 0;
   padding: 1em;
-  min-width: 12em;
-  max-width: 100%;
+  min-width: 80%;
+  max-width: 80%;
   color: #100f0f;
   font-size: 0.94em;
   border: 2px solid #5d5656;
@@ -37,7 +38,39 @@
   }
 }
 
-.chat.right {
+/* 左側のチャットアイコン*/
+.licon {
+  overflow: hidden;
+  /* 画像の幅 */
+  width: 60px;
+  /* 画像の高さ */
+  height: auto;
+  /* 画像の位置を左から0に */
+  left: 0;
+  /* 画像の位置を右から0に */
+  right: 0;
+  /* 画像を丸く表示する */
+  border-radius: 50%;
+  /* 画像の縁取りの太さとカラー */
+  border: 2px solid #5d5656;
+  /* アイコンと吹き出しの間をあける*/
+  margin-left: 5px;
+  margin-right: 15px;
+}
+
+/* 右側のチャットメッセージ */
+.rchat {
+  position: relative;
+  display: inline-block;
+  margin: 1.5em 0;
+  padding: 1em;
+  min-width: 80%;
+  max-width: 80%;
+  color: #100f0f;
+  font-size: 0.94em;
+  border: 2px solid #5d5656;
+  border-radius: 16px;
+  background: #e9e7e7;
 
   &:before {
     content: "";
@@ -48,4 +81,38 @@
     border: 15px solid transparent;
     border-left: 15px solid #5d5656;
   }
+
+  &>* {
+    margin: 0.5rem 0;
+
+    &:first-child,
+    &:last-child {
+      margin: 0;
+    }
+  }
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
+}
+
+/* 右側のチャットアイコン*/
+.ricon {
+  overflow: hidden;
+  /* 画像の幅 */
+  width: 60px;
+  /* 画像の高さ */
+  height: auto;
+  /* 画像の位置を左から0に */
+  left: 0;
+  /* 画像の位置を右から0に */
+  right: 0;
+  /* 画像を丸く表示する */
+  border-radius: 50%;
+  /* 画像の縁取りの太さとカラー */
+  border: 2px solid #5d5656;
+  /* アイコンと吹き出しの間をあける*/
+  margin-left: 15px;
+  margin-right: 5px;
 }

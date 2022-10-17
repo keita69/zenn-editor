@@ -5,7 +5,8 @@ import crypto from 'crypto';
 import {
   containerDetailsOptions,
   containerMessageOptions,
-  containerChatOptions,
+  containerLChatOptions,
+  containerRChatOptions,
 } from './utils/md-container';
 import { mdRendererFence } from './utils/md-renderer-fence';
 import { mdLinkifyToCard } from './utils/md-linkify-to-card';
@@ -35,7 +36,8 @@ md.use(mdBr)
   .use(mdCustomBlock)
   .use(mdContainer, 'details', containerDetailsOptions)
   .use(mdContainer, 'message', containerMessageOptions)
-  .use(mdContainer, 'chat', containerChatOptions)
+  .use(mdContainer, 'lchat', containerLChatOptions)
+  .use(mdContainer, 'rchat', containerRChatOptions)
   .use(mdFootnote)
   .use(mdTaskLists, { enabled: true })
   .use(mdInlineComments)
